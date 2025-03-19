@@ -1,0 +1,11 @@
+Django
+djangorestframework
+django-cors-headers
+django-filter
+django-storages
+Pillow
+sentry-sdk
+gunicorn
+mssql-django
+pyodbc
+python-dotenv
