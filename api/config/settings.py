@@ -84,19 +84,19 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'mssql',
-#         'NAME': 'ShuviDB',  # Database name
-#         'USER': 'gunnyvukhi',  # SQL Server username
-#         'PASSWORD': '2422005',  # SQL Server password
-#         'HOST': 'localhost',  # e.g., 'localhost' or '192.168.1.10'
-#         'PORT': '1433',  # Default SQL Server port
-#         'OPTIONS': {
-#             'driver': 'ODBC Driver 17 for SQL Server',  # Ensure correct ODBC driver version
-#         },
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # MySQL backend
+        'NAME': 'shuvidb',         # Replace with your DB name
+        'USER': 'root',              # Your MySQL username
+        'PASSWORD': '',          # Your MySQL password
+        'HOST': 'localhost',                  # Or the IP of your MySQL server
+        'PORT': '3306',                       # Default MySQL port
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+    }
+}
 
 
 # Password validation
