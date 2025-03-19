@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -19,14 +20,16 @@ from sentry_sdk.integrations.django import DjangoIntegration
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env file
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-$227hjjmuq2e!)o^@2&#2v#+(-=@$v362o@8g#s9!2)tjn1)1a"
-
-ALLOWED_HOSTS = []
+SECRET_KEY = os.getenv('SECRET_KEY')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+ENV_NAME = os.getenv('ENV_NAME')
 
 DEFAULT_APPS = [
     "django.contrib.admin",
@@ -41,14 +44,25 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
     "storages",
-    "django_filters",
+    "django_filters"
 ]
 
 SELF_APPS = [
     "apps.core",
+    "apps.gym",
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + SELF_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -87,11 +101,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # MySQL backend
-        'NAME': 'shuvidb',         # Replace with your DB name
-        'USER': 'root',              # Your MySQL username
-        'PASSWORD': '',          # Your MySQL password
-        'HOST': 'localhost',                  # Or the IP of your MySQL server
-        'PORT': '3306',                       # Default MySQL port
+        'NAME': os.getenv('DB_NAME'),         # Replace with your DB name
+        'USER': os.getenv('DB_USERNAME'),              # Your MySQL username
+        'PASSWORD': os.getenv('DB_PASSWORD'),          # Your MySQL password
+        'HOST': os.getenv('DB_HOST'),                  # Or the IP of your MySQL server
+        'PORT': os.getenv('DB_PORT'),                       # Default MySQL port
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
@@ -140,7 +154,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ### --- SENTRY SETTINGS --- ###
 if not DEBUG:
