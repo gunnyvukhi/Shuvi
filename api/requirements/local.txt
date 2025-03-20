@@ -1,4 +1,5 @@
 -r common.txt
 ruff
 pre-commit
+markdown
 pytest-django

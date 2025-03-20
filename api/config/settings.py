@@ -62,6 +62,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    
 }
 
 MIDDLEWARE = [
@@ -166,3 +167,5 @@ if not DEBUG:
         traces_sample_rate=0.5,
         send_default_pii=False,
     )
+
+AUTH_USER_MODEL = "gym.User"
