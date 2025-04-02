@@ -1,0 +1,66 @@
+.otp-container {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #ffffff;
+    height: auto;
+    color: #282a36;
+
+    h1 {
+        font-size: 2rem;
+        margin: 0 0 1rem 0;
+        color: #464646;
+    }
+    .otp-email {
+        font-size: 1rem;
+        text-align: center;
+        margin: 2rem 0 0 0;
+        color: #464646;
+    }
+    .otp-resend{
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: underline;
+        text-decoration-color: #2196F3;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2rem;
+        text-align: center;
+        margin: 0.8rem 0 1rem 0;
+        color: #2196F3;
+        cursor: pointer;
+    }
+    .otp-field {
+        display: flex;
+    }
+
+    .otp-field input {
+        width: 24px;
+        font-size: 24px;
+        padding: 8px 6px;
+        text-align: center;
+        border-radius: 5px;
+        margin: 2px;
+        border: 2px solid #55525c;
+        background: #21232d;
+        font-weight: bold;
+        color: #fff;
+        outline: none;
+        transition: all 0.1s;
+    }
+
+    .otp-field input:focus {
+        border: 2px solid #277dff;
+        box-shadow: 0 0 2px 2px #277dff6a;
+    }
+
+    .disabled {
+        opacity: 0.5;
+    }
+
+    .space {
+        margin-right: 1rem !important;
+    }
+}

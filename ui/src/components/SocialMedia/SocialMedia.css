@@ -1,0 +1,28 @@
+/* SocialMedia.css */
+
+/* Container for social media icons */
+.social-media-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+}
+
+/* Individual social media icon styles */
+.social-media-container i {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-media-container i:hover {
+    background-color: #0077b5; /* Example hover color */
+    transform: scale(1.1);
+}
+
