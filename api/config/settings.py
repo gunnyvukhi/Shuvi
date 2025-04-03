@@ -44,12 +44,15 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
     "storages",
-    "django_filters"
+    "django_filters",
+    'silk',
 ]
 
 SELF_APPS = [
     "apps.core",
+    "apps.users",
     "apps.gym",
+    "apps.store",
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + SELF_APPS
@@ -58,9 +61,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
     ],
     
 }
@@ -74,6 +74,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -168,4 +169,3 @@ if not DEBUG:
         send_default_pii=False,
     )
 
-AUTH_USER_MODEL = "gym.User"

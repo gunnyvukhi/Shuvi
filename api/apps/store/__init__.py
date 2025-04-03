@@ -10,7 +10,7 @@ __version__ = '1.0.0'
 
 def initialize_app():
     # Initialization code for the gym app
-    print("Gym app initialized")
+    print("Store app initialized")
 
 # Initialize the app when the package is imported
 initialize_app()

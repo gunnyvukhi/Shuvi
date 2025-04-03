@@ -1,10 +1,7 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 from django.db.models.deletion import CASCADE
-class User(AbstractUser):
-    pass
-
+from django.contrib.auth.models import User
 class Measurement(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
     weight = models.FloatField()
