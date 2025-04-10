@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import './login.scss';
+import './Login.scss';
 import loginBg from '../../assets/images/login_bg.png';
-import Input from '../../components/Input/Input';
-import SocialMedia from '../../components/SocialMedia/SocialMedia';
-import OtpInput from '../../components/OtpInput/OtpInput';
-const Login = () => {
+import Input from '../../components/UI/Input/Input';
+import SocialMedia from '../../components/UI/SocialMedia/SocialMedia';
+import OtpInput from '../../components/UI/OtpInput/OtpInput';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import { FaRegUser } from "react-icons/fa";
+import { FiUnlock } from "react-icons/fi";
+
+const Login = ({ setToken }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [sighInName, setSighInName] = useState('');
@@ -13,13 +18,40 @@ const Login = () => {
     const [sighInPassword2, setSighInPassword2] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
-    const onSubmitSignIn = () =>{
+    const [isLoginFormValid, setIsLoginFormValid] = useState(false);
+
+    const onSubmitLogin = () => {
+        if (!email || !password) return;
+        console.log("Login Form Submitted");
+        console.log(email)
+        document.querySelector(".container").classList.add("active");
+    }
+
+
+    const onSubmitSignIn = () => {
         if (!isFormValid) return;
         console.log("Sign Up Form Submitted");
         console.log(sighInName)
         console.log(sighInEmail)
         console.log(sighInPassword)
         setIsSignUp(true);
+        setTimeout(() => {
+            axios({
+                method: "POST",
+                url: "http://127.0.0.1:5000/login",
+                data: values
+            })
+                .then((response) => {
+                    setToken(response.data.access_token)
+                }).catch((error) => {
+                    if (error.response) {
+                        console.log(error.response)
+                        console.log(error.response.status)
+                        console.log(error.response.headers)
+                    }
+                })
+            // actions.setSubmitting(false)
+        }, 1000)
     }
 
     const validateEmail = (email) => {
@@ -38,10 +70,6 @@ const Login = () => {
         document.querySelector(".container").classList.toggle("log-in");
     };
 
-    const handleContainerFormClick = () => {
-        document.querySelector(".container").classList.add("active");
-    };
-    
     useEffect(() => {
         const isSignUpFormValid =
             sighInName &&
@@ -50,10 +78,14 @@ const Login = () => {
             validatePassword2(sighInPassword2);
 
         setIsFormValid(isSignUpFormValid);
-    }, [sighInName, sighInEmail, sighInPassword, sighInPassword2]);
+
+        const isLoginValid = validateEmail(email) && validatePassword(password);
+        setIsLoginFormValid(isLoginValid);
+
+    }, [sighInName, sighInEmail, sighInPassword, sighInPassword2, email, password]);
 
     return (
-        <div className='loginPage' style={{ backgroundImage: `url(${loginBg})`}}>
+        <div className='loginPage' style={{ backgroundImage: `url(${loginBg})` }}>
             <div className="container">
                 <div className="box"></div>
                 <div className="container-forms">
@@ -61,28 +93,30 @@ const Login = () => {
                         <div className="info-item">
                             <div className="table">
                                 <div className="table-cell">
+                                    <FiUnlock className='icon1' />
                                     <p>
                                         Đã có tài khoản?
                                     </p>
                                     <div className="btn" onClick={handleInfoItemClick}>
                                         Đăng nhập ngay
                                     </div>
-                                    <hr />
-                                    <SocialMedia />
+                                    <div className="divider">hoặc</div>
+                                    <SocialMedia color={"#323264"} bgColor={"#FFFFFF"}/>
                                 </div>
                             </div>
                         </div>
                         <div className="info-item">
                             <div className="table">
                                 <div className="table-cell">
+                                    <FaRegUser className='icon1' />
                                     <p>
                                         Chưa có tài khoản?
                                     </p>
                                     <div className="btn" onClick={handleInfoItemClick}>
                                         Đăng kí tại đây
                                     </div>
-                                    <hr />
-                                    <SocialMedia />
+                                    <div className="divider">hoặc</div>
+                                    <SocialMedia color={"#000000"} bgColor={"#FFFFFF"}/>
                                 </div>
                             </div>
                         </div>
@@ -92,9 +126,9 @@ const Login = () => {
                             <div className="table">
                                 <div className="table-cell">
                                     <h2 className="title">Đăng nhập</h2>
-                                        <Input id="email" name="email" type="email" placeholder="Email" value={email} setValue={setEmail}/>
-                                        <Input id="password" name="password" type="password" placeholder="Mật khẩu" value={password} setValue={setPassword}/>
-                                    <div className="btn" onClick={handleContainerFormClick}>
+                                    <Input id="email" name="email" type="email" placeholder="Email" value={email} setValue={setEmail} validate={validateEmail} warning={"Email không hợp lệ"} />
+                                    <Input id="password" name="password" type="password" placeholder="Mật khẩu" value={password} setValue={setPassword} validate={validatePassword} warning={"Mật khẩu không hợp lệ"} />
+                                    <div className="btn" onClick={onSubmitLogin} style={isLoginFormValid ? {} : { opacity: 0.5, cursor: "not-allowed" }}>
                                         Đăng nhập
                                     </div>
                                 </div>
@@ -103,23 +137,23 @@ const Login = () => {
                         <div className="form-item sign-up">
                             <div className="table">
                                 {isSignUp ?
-                                <div className="table-cell">
-                                    <OtpInput email={sighInEmail}/>
-                                    <div className="btn" onClick={() => setIsSignUp(false)}>
-                                        Quay lại
+                                    <div className="table-cell">
+                                        <OtpInput email={sighInEmail} />
+                                        <div className="btn" onClick={() => setIsSignUp(false)}>
+                                            Quay lại
+                                        </div>
                                     </div>
-                                </div> 
-                                :
-                                <div className="table-cell">
-                                <h2 className="title">Tạo tài khoản</h2>
-                                <Input id="sighInName" name="sighInName" type="text" placeholder="Họ và tên" value={sighInName} setValue={setSighInName}/>
-                                <Input id="sighInEmail" name="sighInEmail" type="email" placeholder="Email" value={sighInEmail} setValue={setSighInEmail} validate={validateEmail} warning={"Email không hợp lệ"}/>
-                                <Input id="sighInPassword" name="sighInPassword" type="password" placeholder="Mật khẩu" value={sighInPassword} setValue={setSighInPassword} validate={validatePassword} warning={"Mật khẩu phải dài trên 8 và bao gồm ít nhất 1 ký tự in hoa, ký tự thường, ký tự đặc biệt và số"}/>
-                                <Input id="sighInPassword2" name="sighInPassword2" type="password" placeholder="Nhập lại mật khẩu" value={sighInPassword2} setValue={setSighInPassword2} validate={validatePassword2} warning={"Mật khẩu nhập không trùng khớp"}/>
-                                    <div className="btn" onClick={onSubmitSignIn} style={isFormValid ? {} : { opacity: 0.5, cursor: "not-allowed"}}>
-                                        Đăng kí
+                                    :
+                                    <div className="table-cell">
+                                        <h2 className="title">Tạo tài khoản</h2>
+                                        <Input id="sighInName" name="sighInName" type="text" placeholder="Họ và tên" value={sighInName} setValue={setSighInName} />
+                                        <Input id="sighInEmail" name="sighInEmail" type="email" placeholder="Email" value={sighInEmail} setValue={setSighInEmail} validate={validateEmail} warning={"Email không hợp lệ"} />
+                                        <Input id="sighInPassword" name="sighInPassword" type="password" placeholder="Mật khẩu" value={sighInPassword} setValue={setSighInPassword} validate={validatePassword} warning={"Mật khẩu phải dài trên 8 và bao gồm ít nhất 1 ký tự in hoa, ký tự thường, ký tự đặc biệt và số"} />
+                                        <Input id="sighInPassword2" name="sighInPassword2" type="password" placeholder="Nhập lại mật khẩu" value={sighInPassword2} setValue={setSighInPassword2} validate={validatePassword2} warning={"Mật khẩu nhập không trùng khớp"} />
+                                        <div className="btn" onClick={onSubmitSignIn} style={isFormValid ? {} : { opacity: 0.5, cursor: "not-allowed" }}>
+                                            Đăng kí
+                                        </div>
                                     </div>
-                                </div>
                                 }
 
                             </div>
@@ -129,6 +163,10 @@ const Login = () => {
             </div>
         </div>
     );
+};
+
+Login.propTypes = {
+    setToken: PropTypes.func.isRequired,
 };
 
 export default Login;

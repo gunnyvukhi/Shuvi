@@ -8,21 +8,28 @@
     gap: 16px;
     padding: 16px;
 }
-
+.social-media-container a:link {
+    text-decoration: none;
+    color: inherit;
+}
+.social-media-container a:visited {
+    text-decoration: none;
+    color: inherit;
+}
 /* Individual social media icon styles */
 .social-media-container i {
     width: 40px;
     height: 40px;
     display: flex;
     justify-content: center;
+    text-decoration: none;
     align-items: center;
     border-radius: 50%;
-    background-color: #e0e0e0;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .social-media-container i:hover {
-    background-color: #0077b5; /* Example hover color */
+    opacity: 0.9;
     transform: scale(1.1);
 }
 
