@@ -11,3 +11,4 @@ pymysql
 pyodbc
 python-dotenv
 django-silk
+djangorestframework-simplejwt

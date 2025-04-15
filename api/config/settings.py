@@ -59,8 +59,9 @@ INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + SELF_APPS
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        
     ],
     
 }

@@ -7,14 +7,39 @@ from apps.core.models import BaseModel
 class Category(BaseModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True, default='')
+
     def __str__(self):
         return self.name
 
+class SubCategory(BaseModel):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True, default='')
+    category = models.ForeignKey(Category, on_delete=CASCADE, related_name='subcategories')
+
+    def __str__(self):
+        return self.name
+
+class Brand(BaseModel):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True, default='')
+    image = models.ImageField(upload_to='brands/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class ProductImage(BaseModel):
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='products/')
+    position = models.PositiveIntegerField(default=1)
+    is_main = models.BooleanField(default=False)
+    def __str__(self):
+        return f"Image for {self.product.name}"
+
 class Product(BaseModel):
     name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=CASCADE, related_name='products')
+    sub_category = models.ForeignKey(SubCategory, on_delete=CASCADE, related_name='products')
+    brand = models.ForeignKey(Brand, on_delete=CASCADE, related_name='products', blank=True, null=True)
     description = models.TextField()
-    image = models.ImageField(upload_to='products/', blank=True, null=True)
 
     @property
     def in_stock(self):
@@ -40,6 +65,7 @@ class ProductSize(BaseModel):
     size = models.CharField(max_length=50)
     stock = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    is_main = models.BooleanField(default=False)
     @property
     def in_stock(self):
         return self.stock > 0
@@ -58,7 +84,7 @@ class Order(BaseModel):
         default=StatusChoices.PENDING
     )
 
-    products = models.ManyToManyField(Product, through="OrderItem", related_name='orders')
+    product_size = models.ManyToManyField(ProductSize, through="OrderItem", related_name='orders')
 
     def __str__(self):
         return f"Order {self.order_id } by {self.user.username}"
@@ -70,7 +96,7 @@ class OrderItem(BaseModel):
         on_delete=models.CASCADE,
         related_name='items'
     )
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
     @property
@@ -86,7 +112,7 @@ class CartItem(BaseModel):
         on_delete=models.CASCADE,
         related_name='cart_items'
     )
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
     @property
@@ -99,7 +125,7 @@ class CartItem(BaseModel):
 
 class Cart(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
-    products = models.ManyToManyField(Product, through="CartItem", related_name='carts')
+    product_size = models.ManyToManyField(ProductSize, through="CartItem", related_name='carts')
 
     @property
     def total_price(self):
