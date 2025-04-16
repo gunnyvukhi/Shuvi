@@ -1,0 +1,32 @@
+.profile-dropdown{
+    height: 100%;
+    width: 100%;
+}
+.profile-dropdown .profile-dropdown-button{
+    color: var(--navbar-light-primary);
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    text-decoration: none;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+
+    font-size: 0.9rem;
+}
+
+.profile-dropdown .profile-dropdown-button:hover{
+    background-color: var(--navbar-light-secondary);
+    color: var(--navbar-light-primary);
+}
+.profile-dropdown .profile-dropdown-button.selected{
+    background-color: var(--navbar-light-secondary);
+    color: var(--navbar-light-primary);
+}
+.profile-dropdown .profile-dropdown-button .profile-dropdown-icon{
+    margin: 0 8px 0 4px;
+}

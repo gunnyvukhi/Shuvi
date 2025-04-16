@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import React from 'react';
 import Login from './page/Login/Login.jsx';
 import useToken from './components/hooks/useToken.js'
-import Home from './page/Home/Home.jsx';
+import Home from './page/home/Home.jsx';
 function App() {
 
   const { token, setToken, removeToken } = useToken()
