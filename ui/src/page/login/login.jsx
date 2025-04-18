@@ -4,6 +4,7 @@ import loginBg from '../../assets/images/login_bg.png';
 import Input from '../../components/UI/Input/Input';
 import SocialMedia from '../../components/UI/SocialMedia/SocialMedia';
 import OtpInput from '../../components/UI/OtpInput/OtpInput';
+import Loading from '../../components/UI/Loading/Loading';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { FaRegUser } from "react-icons/fa";
@@ -19,12 +20,29 @@ const Login = ({ setToken }) => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
     const [isLoginFormValid, setIsLoginFormValid] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmitLogin = () => {
         if (!email || !password) return;
-        console.log("Login Form Submitted");
-        console.log(email)
-        document.querySelector(".container").classList.add("active");
+        setIsSubmitting(true);
+        axios({
+            method: "POST",
+            url: "http://127.0.0.1:8000/api/token/",
+            data: {
+                "username": email,
+                "password": password
+            }
+        }).then((response) => {
+            setToken(response.data.access)
+            document.querySelector(".container").classList.add("active");
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error.response)
+                console.log(error.response.status)
+                console.log(error.response.headers)
+            }
+            setIsSubmitting(false);
+        })
     }
 
 
@@ -50,7 +68,7 @@ const Login = ({ setToken }) => {
                         console.log(error.response.headers)
                     }
                 })
-            // actions.setSubmitting(false)
+
         }, 1000)
     }
 
@@ -101,7 +119,7 @@ const Login = ({ setToken }) => {
                                         Đăng nhập ngay
                                     </div>
                                     <div className="divider">hoặc</div>
-                                    <SocialMedia color={"#323264"} bgColor={"#FFFFFF"}/>
+                                    <SocialMedia color={"#323264"} bgColor={"#FFFFFF"} />
                                 </div>
                             </div>
                         </div>
@@ -116,7 +134,7 @@ const Login = ({ setToken }) => {
                                         Đăng kí tại đây
                                     </div>
                                     <div className="divider">hoặc</div>
-                                    <SocialMedia color={"#000000"} bgColor={"#FFFFFF"}/>
+                                    <SocialMedia color={"#000000"} bgColor={"#FFFFFF"} />
                                 </div>
                             </div>
                         </div>
@@ -128,8 +146,8 @@ const Login = ({ setToken }) => {
                                     <h2 className="title">Đăng nhập</h2>
                                     <Input id="email" name="email" type="email" placeholder="Email" value={email} setValue={setEmail} validate={validateEmail} warning={"Email không hợp lệ"} />
                                     <Input id="password" name="password" type="password" placeholder="Mật khẩu" value={password} setValue={setPassword} validate={validatePassword} warning={"Mật khẩu không hợp lệ"} />
-                                    <div className="btn" onClick={onSubmitLogin} style={isLoginFormValid ? {} : { opacity: 0.5, cursor: "not-allowed" }}>
-                                        Đăng nhập
+                                    <div className="btn" onClick={onSubmitLogin} style={isLoginFormValid ? (isSubmitting ? { cursor: "not-allowed" } : {}) : { opacity: 0.5, cursor: "not-allowed" }}>
+                                        {!isSubmitting ? 'Đăng nhập' : <Loading width={'24px'} height={'24px'} />}
                                     </div>
                                 </div>
                             </div>

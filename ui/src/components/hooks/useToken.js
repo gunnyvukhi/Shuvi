@@ -2,29 +2,41 @@ import { useState } from 'react';
 
 function useToken() {
 
-  function getToken() {
-    const userToken = localStorage.getItem('shuvi_access_token');
-    return userToken && userToken
+  function getAccessToken() {
+    return localStorage.getItem('shuvi_access_token');
   }
 
-  const [token, setToken] = useState(getToken());
-
-  function saveToken(userToken) {
-    localStorage.setItem('shuvi_access_token', userToken);
-    setToken(userToken);
+  function getRefreshToken() {
+    return localStorage.getItem('shuvi_refresh_token');
   }
 
-  function removeToken() {
+  const [accessToken, setAccessToken] = useState(getAccessToken());
+  const [refreshToken, setRefreshToken] = useState(getRefreshToken());
+
+  function saveTokens({ accessToken, refreshToken }) {
+    if (accessToken) {
+      localStorage.setItem('shuvi_access_token', accessToken);
+      setAccessToken(accessToken);
+    }
+    if (refreshToken) {
+      localStorage.setItem('shuvi_refresh_token', refreshToken);
+      setRefreshToken(refreshToken);
+    }
+  }
+
+  function removeTokens() {
     localStorage.removeItem('shuvi_access_token');
-    setToken(null);
+    localStorage.removeItem('shuvi_refresh_token');
+    setAccessToken(null);
+    setRefreshToken(null);
   }
 
   return {
-    setToken: saveToken,
-    token,
-    removeToken
-  }
-
+    setTokens: saveTokens,
+    accessToken,
+    refreshToken,
+    removeTokens
+  };
 }
 
 export default useToken;
