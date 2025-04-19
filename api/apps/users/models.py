@@ -1,9 +1,16 @@
-import uuid
 from django.db import models
 from django.db.models.deletion import CASCADE
 from django.contrib.auth.models import User
-from django.utils import timezone
 from apps.core.models import BaseModel
+class UserInfo(BaseModel):
+    user = models.OneToOneField(User, on_delete=CASCADE, related_name='user_info')
+    address = models.CharField(max_length=255, blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    rank = models.CharField(max_length=50, blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
+    
 
 class Country(BaseModel):
     name = models.CharField(max_length=100)
@@ -32,20 +39,3 @@ class Address(BaseModel):
     is_primary = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-class UserInfo(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='info')
-    address = models.CharField(max_length=255, blank=True, null=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-    date_of_birth = models.DateField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
-    
-    @property
-    def age(self):
-        if self.date_of_birth:
-            return (timezone.now().date() - self.date_of_birth).days // 365
-        return None
-    
-    def __str__(self):
-        return self.name
-    

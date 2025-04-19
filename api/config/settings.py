@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-
+from datetime import timedelta
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -45,7 +45,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "storages",
     "django_filters",
-    'silk',
+    'silk'
 ]
 
 SELF_APPS = [
@@ -63,7 +63,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         
     ],
-    
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=180),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7)
 }
 
 MIDDLEWARE = [
@@ -104,7 +108,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # MySQL backend
-        'NAME': os.getenv('DB_NAME'),         # Replace with your DB name
+        'NAME': os.getenv('DB_NAME'),          # Replace with your DB name
         'USER': os.getenv('DB_USERNAME'),              # Your MySQL username
         'PASSWORD': os.getenv('DB_PASSWORD'),          # Your MySQL password
         'HOST': os.getenv('DB_HOST'),                  # Or the IP of your MySQL server
@@ -156,7 +160,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 DEBUG = os.getenv('DEBUG') == 'True'
 
 ### --- SENTRY SETTINGS --- ###

@@ -3,8 +3,6 @@ from decimal import Decimal
 
 from django.core.management.base import BaseCommand
 from django.utils import lorem_ipsum
-from django.contrib.auth.models import User
-from django.db import transaction
 from apps.store.models import Category, SubCategory, Brand, Product, ProductSize, Order, OrderItem
 
 class Command(BaseCommand):
@@ -12,13 +10,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # get or create superuser
-        user = User.objects.filter(username='gunnyvukhi@gmail.com').first()
-        if not user:
-            user = User.objects.create_superuser(username='gunnyvukhi@gmail.com', password='Ta2422005@')
-            user.save()
-        else:
-            user.set_password('Ta2422005@')
-            user.save()
 
         categorys = [
             Category(name="Whey protein", description=lorem_ipsum.paragraph()),
@@ -118,11 +109,12 @@ class Command(BaseCommand):
         # Save product sizes in bulk
         ProductSize.objects.bulk_create(product_sizes)
         product_sizes = list(ProductSize.objects.all())
+        
         # create some dummy orders tied to the superuser
-        for _ in range(3):
-            # create an Order with 2 order items
-            order = Order.objects.create(user=user)
-            for product in random.sample(list(product_sizes), 3):
-                OrderItem.objects.create(
-                    order=order, product_size=product, quantity=random.randint(1,5)
-                )
+        # for _ in range(3):
+        #     # create an Order with 2 order items
+        #     order = Order.objects.create(user=user)
+        #     for product in random.sample(list(product_sizes), 3):
+        #         OrderItem.objects.create(
+        #             order=order, product_size=product, quantity=random.randint(1,5)
+        #         )
