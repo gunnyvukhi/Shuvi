@@ -22,7 +22,6 @@ class RegisterView(generics.CreateAPIView):
         response_data = {
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-            'user': serializer.data
         }
         return Response(response_data)
 

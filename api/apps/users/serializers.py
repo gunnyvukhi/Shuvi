@@ -32,10 +32,36 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user_info = serializers.SerializerMethodField()
+    addresses = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['username', 'first_name', 'last_name', 'user_info', 'addresses']
+
+    def get_user_info(self, obj):
+        try:
+            user_info = UserInfo.objects.get(user=obj)
+            return {
+                'phone': user_info.phone_number,
+                'date_of_birth': user_info.date_of_birth,
+                'gender': user_info.gender,
+                'profile_picture': user_info.profile_picture.url if user_info.profile_picture else None,
+            }
+        except UserInfo.DoesNotExist:
+            return None
+
+    def get_addresses(self, obj):
+        addresses = Address.objects.filter(user=obj)
+        return [
+            {
+                'street': address.street,
+                'city': address.city.name,
+                'country': address.city.country.name,
+                'is_primary': address.is_primary,
+            }
+            for address in addresses
+        ]
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:

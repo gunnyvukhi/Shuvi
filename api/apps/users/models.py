@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from apps.core.models import BaseModel
 class UserInfo(BaseModel):
     user = models.OneToOneField(User, on_delete=CASCADE, related_name='user_info')
-    address = models.CharField(max_length=255, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    gender = models.BooleanField(default=True) 
     date_of_birth = models.DateField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     rank = models.CharField(max_length=50, blank=True, null=True)
