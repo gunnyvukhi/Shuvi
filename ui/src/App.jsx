@@ -1,31 +1,38 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
+import axios from 'axios';
 import Login from './page/Login/Login.jsx';
 import useToken from './components/hooks/useToken.js'
-import Home from './page/home/Home.jsx';
+import Home from './page/Home/Home.jsx';
 function App() {
 
-  const { token, setToken, removeToken } = useToken()
+  const { saveTokens, accessToken, refreshToken, accessTokenExpiry, refreshTokenExpiry, handleAccessTokenExpired, removeTokens } = useToken()
+
+  useEffect(() => {
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (!refreshTokenExpiry || refreshTokenExpiry === "" || refreshTokenExpiry === undefined || parseInt(refreshTokenExpiry) < currentTime) {
+      removeTokens();
+    }
+  }, [refreshTokenExpiry, removeTokens])
 
   return (
-    // <BrowserRouter>
-    //     {!token && token!=="" && token!== undefined?
-    //     <Login setToken={setToken}/>
-    //     :(
-    //       <>
-    //         <Routes>
-    //           <Route exact path="/home" element={<Home token={token} removeToken={removeToken}/>}></Route>
-    //         </Routes>
-    //       </>
-    //     )}
-    // </BrowserRouter>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login setToken={setToken} />} />
-        <Route path="/home" element={<Home token={token} removeToken={removeToken} />} />
+        {!refreshToken || refreshToken === "" || refreshToken === undefined ? (
+          <Route
+            path="/"
+            element={<Login setTokens={saveTokens} />}
+          />
+        ) : (
+            <Route
+              exact
+              path="/"
+              element={<Home accessToken={accessToken} handleAccessTokenExpired={handleAccessTokenExpired} removeTokens={removeTokens}/>}
+            />
+        )}
       </Routes>
     </BrowserRouter>
-  )
-} 
+  );
+}
 
 export default App

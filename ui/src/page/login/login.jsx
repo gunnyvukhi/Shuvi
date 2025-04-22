@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { FaRegUser } from "react-icons/fa";
 import { FiUnlock } from "react-icons/fi";
 
-const Login = ({ setToken }) => {
+const Login = ({ setTokens }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [sighInName, setSighInName] = useState('');
@@ -27,13 +27,14 @@ const Login = ({ setToken }) => {
         setIsSubmitting(true);
         axios({
             method: "POST",
-            url: "http://127.0.0.1:8000/api/token/",
+            url: "http://127.0.0.1:8000/users/token/",
             data: {
                 "username": email,
                 "password": password
             }
         }).then((response) => {
-            setToken(response.data.access)
+            console.log(response.data)
+            setTokens({accessToken : response.data.access, refreshToken : response.data.refresh, accessTokenExpiry : Math.floor(Date.now() / 1000) + 180 * 60, refreshTokenExpiry : Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60});
             document.querySelector(".container").classList.add("active");
         }).catch((error) => {
             if (error.response) {
@@ -68,7 +69,6 @@ const Login = ({ setToken }) => {
                         console.log(error.response.headers)
                     }
                 })
-
         }, 1000)
     }
 

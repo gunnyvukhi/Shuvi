@@ -2,19 +2,21 @@ import { useState } from 'react';
 import ProfileDropdown from '../../UI/ProfileDropdown/ProfileDropDown';
 import './SideBar.scss';
 import PropTypes from 'prop-types';
-
-const navBtnList = [
+import demouser from '../../../assets/demo_user.jpeg';
+const navBtnList1 = [
     { name: 'Trang Chủ', icon: 'fas fa-house-user' },
     { name: 'Tập luyện', icon: 'fas fa-dumbbell' },
-    { name: 'Dinh dưỡng', icon: 'fas fa-utensils' },
+    { name: 'Dinh dưỡng', icon: 'fas fa-utensils' }]
+const navBtnList2 = [
     { name: 'Lịch trình', icon: 'fas fa-calendar-alt' },
     { name: 'Công cụ khác', icon: 'fas fa-tools' },
-    { name: 'Cửa hàng', icon: 'fas fa-shopping-cart' },
+    { name: 'Cửa hàng', icon: 'fas fa-shopping-cart' }]
+const navBtnList3 = [
     { name: 'Premium', icon: 'fas fa-gem' },
     { name: 'Premium', icon: 'fas fa-gem' },
 ];
 
-const Sidebar = ({ selected }) => {
+const Sidebar = ({ selected, data, removeTokens}) => {
     const [selectedBtn, setSelectedBtn] = useState(selected);
 
     const default_highlight = (selectedBtn === undefined || selectedBtn === null || selectedBtn < 1) 
@@ -33,8 +35,7 @@ const Sidebar = ({ selected }) => {
             </div>
             <div id="nav-content" style={{'--default-highlight': default_highlight}}>
                 <hr />
-                {navBtnList.map((link, index) => (
-                    <>
+                {navBtnList1.map((link, index) => (
                     <div className={index + 1 === selectedBtn ? (hover ? "nav-button" : "nav-button selected-btn") : "nav-button"} 
                         key={index} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
                         onClick={() => {setSelectedBtn(index + 1)}}
@@ -42,8 +43,26 @@ const Sidebar = ({ selected }) => {
                         <i className={link.icon} alt={`${link.name} icon`} />
                         <span>{link.name}</span>
                     </div>
-                    {(((index + 1) % 3) == 0) ? <hr style={{ transform: "translateY(-2.2px)" }} /> : null}
-                    </>
+                ))}
+                <hr style={{ transform: "translateY(-2.2px)" }} />
+                {navBtnList2.map((link, index) => (
+                    <div className={index + 4 === selectedBtn ? (hover ? "nav-button" : "nav-button selected-btn") : "nav-button"} 
+                        key={index} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+                        onClick={() => {setSelectedBtn(index + 1)}}
+                        >
+                        <i className={link.icon} alt={`${link.name} icon`} />
+                        <span>{link.name}</span>
+                    </div>
+                ))}
+                <hr style={{ transform: "translateY(-2.2px)" }} />
+                {navBtnList3.map((link, index) => (
+                    <div className={index + 7 === selectedBtn ? (hover ? "nav-button" : "nav-button selected-btn") : "nav-button"} 
+                        key={index} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+                        onClick={() => {setSelectedBtn(index + 1)}}
+                        >
+                        <i className={link.icon} alt={`${link.name} icon`} />
+                        <span>{link.name}</span>
+                    </div>
                 ))}
 
                 <div id="nav-content-highlight"></div>
@@ -52,23 +71,25 @@ const Sidebar = ({ selected }) => {
             <div id="nav-footer">
                 <div id="nav-footer-heading">
                     <div id="nav-footer-avatar">
-                        <img src="https://yourwebsite.com/avatar.png" alt="User Avatar" />
+                        <img src={demouser} alt="User Avatar" />
                     </div>
                     <div id="nav-footer-titlebox">
-                        <a id="nav-footer-title" href="https://yourwebsite.com/profile" target="_blank">YourName</a>
+                        <a id="nav-footer-title" href="#" target="_blank">{`${data?.first_name || "Your"} ${data?.last_name || "Name"}`}</a>
                         <span id="nav-footer-subtitle">User</span>
                     </div>
                     <label htmlFor="nav-footer-toggle"><i className="fas fa-angle-up"></i></label>
                 </div>
                 <div id="nav-footer-content">
-                    <ProfileDropdown />
+                    <ProfileDropdown removeTokens={removeTokens}/>
                 </div>
             </div>
         </div>
     )
 }
 Sidebar.propTypes = {
-    selected: PropTypes.number
+    selected: PropTypes.number,
+    data: PropTypes.object.isRequired,
+    removeTokens: PropTypes.func.isRequired
 };
 
 Sidebar.defaultProps = {
