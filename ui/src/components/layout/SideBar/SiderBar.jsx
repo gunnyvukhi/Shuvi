@@ -48,7 +48,7 @@ const Sidebar = ({ selected, data, removeTokens}) => {
                 {navBtnList2.map((link, index) => (
                     <div className={index + 4 === selectedBtn ? (hover ? "nav-button" : "nav-button selected-btn") : "nav-button"} 
                         key={index} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-                        onClick={() => {setSelectedBtn(index + 1)}}
+                        onClick={() => {setSelectedBtn(index + 4)}}
                         >
                         <i className={link.icon} alt={`${link.name} icon`} />
                         <span>{link.name}</span>
@@ -58,7 +58,7 @@ const Sidebar = ({ selected, data, removeTokens}) => {
                 {navBtnList3.map((link, index) => (
                     <div className={index + 7 === selectedBtn ? (hover ? "nav-button" : "nav-button selected-btn") : "nav-button"} 
                         key={index} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-                        onClick={() => {setSelectedBtn(index + 1)}}
+                        onClick={() => {setSelectedBtn(index + 7)}}
                         >
                         <i className={link.icon} alt={`${link.name} icon`} />
                         <span>{link.name}</span>

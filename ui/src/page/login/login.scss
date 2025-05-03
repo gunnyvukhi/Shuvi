@@ -14,13 +14,13 @@
   background-color: #000000;
 }
 
-.table {
+.loginPage .table {
   display: table;
   width: 100%;
   height: 100%;
 }
 
-.table-cell {
+.loginPage .table-cell {
   display: table-cell;
   vertical-align: middle;
   padding: 16px;
@@ -30,7 +30,7 @@
   transition: all 0.5s;
 }
 
-.container {
+.loginPage .container {
   position: relative;
   width: 600px;
   margin: 30px auto 0;
@@ -46,7 +46,7 @@
   // border: 5px solid  rgba(42, 42, 64, 0.34);
   box-shadow: 0 0 40px rgba(129, 168, 236, 0.4);
 }
-.container .box {
+.loginPage .container .box {
   position: absolute;
   left: 0;
   top: 0;
@@ -54,7 +54,7 @@
   height: 100%;
   overflow: hidden;
 }
-.container .box:before, .container .box:after {
+.loginPage .container .box:before, .container .box:after {
   content: " ";
   position: absolute;
   left: 152px;
@@ -68,17 +68,17 @@
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
 }
-.container .box:after {
+.loginPage .container .box:after {
   background-color: rgba(20, 20, 20, 0.6);
   top: -10px;
   left: 80px;
   width: 320px;
   height: 180px;
 }
-.container .container-forms {
+.loginPage .container .container-forms {
   position: relative;
 }
-.container .btn {
+.loginPage .container .btn {
   cursor: pointer;
   text-align: center;
   margin: 0 auto;
@@ -93,15 +93,15 @@
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
 }
-.container .btn:hover {
+.loginPage .container .btn:hover {
   opacity: 0.7;
 }
 
-.container .container-forms .container-info {
+.loginPage .container .container-forms .container-info {
   text-align: left;
   font-size: 0;
 }
-.container .container-forms .container-info .info-item {
+.loginPage .container .container-forms .container-info .info-item {
   text-align: center;
   font-size: 16px;
   width: 300px;
@@ -115,30 +115,32 @@
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
-.container .container-forms .container-info .info-item p {
+.loginPage .container .container-forms .container-info .info-item p {
   font-size: 22px;
   line-height: 24px;
+  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   width: fit-content;
   margin: 12px auto;
 }
-.container .container-forms .container-info .info-item .btn {
+.loginPage .container .container-forms .container-info .info-item .btn {
   background-color: transparent;
   margin-bottom: 24px;
   margin-top: 20px;
   border-radius: 24px;
   padding: 6px 24px;
-  height: 24px;
+  height: fit-content;
+  width: fit-content;
   border: 1px solid #fff;
 }
-.container .container-forms .container-info .info-item .table-cell {
+.loginPage .container .container-forms .container-info .info-item .table-cell {
   padding-right: 35px;
 }
-.container .container-forms .container-info .info-item:nth-child(2) .table-cell {
+.loginPage .container .container-forms .container-info .info-item:nth-child(2) .table-cell {
   padding-left: 35px;
   padding-right: 0;
 }
-.container .container-form {
+.loginPage .container .container-form {
   overflow: hidden;
   position: absolute;
   left: 30px;
@@ -153,7 +155,7 @@
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
 }
-.container .container-form:before {
+.loginPage .container .container-form:before {
   content: "✔";
   position: absolute;
   left: 160px;
@@ -166,13 +168,13 @@
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
 }
-.container .container-form .btn {
+.loginPage .container .container-form .btn {
   position: relative;
   box-shadow: 0 0 10px 1px #ff73b3;
   margin-top: 12px;
-  width: 80px;
+  width: fit-content;
 }
-.container .form-item {
+.loginPage .container .form-item {
   position: absolute;
   left: 0;
   top: 0;
@@ -185,52 +187,52 @@
   transition: all 0.5s;
 
 }
-.container .form-item.sign-up {
+.loginPage .container .form-item.sign-up {
   position: absolute;
   left: -100%;
   opacity: 0;
 }
 
-.container.log-in .box:before {
+.loginPage .container.log-in .box:before {
   background-color: rgba(55, 55, 86, 0.4);
   position: absolute;
   left: 180px;
   top: 62px;
   height: 265px;
 }
-.container.log-in .box:after {
+.loginPage .container.log-in .box:after {
   background-color: rgba(30, 30, 53, 0.5);
   top: 22px;
   left: 192px;
   width: 324px;
   height: 220px;
 }
-.container.log-in{
+.loginPage .container.log-in{
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
 }
-.container.log-in .container-form {
+.loginPage .container.log-in .container-form {
   left: 265px;
 }
-.container.log-in .container-form .form-item.sign-up {
+.loginPage .container.log-in .container-form .form-item.sign-up {
   left: 0;
   opacity: 1;
 }
-.container.log-in .container-form .form-item.log-in {
+.loginPage .container.log-in .container-form .form-item.log-in {
   left: -100%;
   opacity: 0;
 }
-.container.active {
+.loginPage .container.active {
   width: 260px;
   height: 140px;
   margin-top: -70px;
 }
-.container.active .container-form {
+.loginPage .container.active .container-form {
   left: 30px;
   top: -30px;
   width: 200px;
   height: 200px;
 }
-.container.active .container-form:before {
+.loginPage .container.active .container-form:before {
   content: "✔";
   position: absolute;
   left: 51px;
@@ -239,32 +241,52 @@
   font-size: 130px;
   opacity: 1;
 }
-.container.active .btn, .container.active .info-item, .container.active .input-group, .container.active .box, .container.active .title{
+.loginPage .container.active .btn, .container.active .info-item, .container.active .input-group, .container.active .box, .container.active .title{
   display: none;
   opacity: 0;
   padding: 0px;
   margin: 0 auto;
   height: 0;
 }
-.container.active .form-item {
+.loginPage .container.active .form-item {
   height: 100%;
 }
-.container.active .container-forms .container-info .info-item {
+.loginPage .container.active .container-forms .container-info .info-item {
   height: 0%;
   opacity: 0;
 }
-.title {
+.loginPage .title {
   font-size: 24px;
   color: #464646;
   text-align: center;
   margin: 0;
   padding: 0;
 }
-.icon1{
+.loginPage .icon1{
   font-size: 1.8em; 
 }
-.divider {
+.loginPage .divider {
   margin: 16px 0 0 0;
   font-size: 16px;
   text-decoration: underline;
+}
+.loginPage .login-warning{
+  color: #c0392b;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 8px;
+  transform: translateY(-10px);
+
+}
+.loginPage .forgot-password-container {
+  font-size: 14px;
+  text-align: right;
+  margin: 0;
+  transform: translateY(-12px);
+}
+.loginPage .forgot-password-container a:link {
+  color: #3498db;
+}
+.loginPage .forgot-password-container a:visited {
+  color: #3498db;
 }

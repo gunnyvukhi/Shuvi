@@ -5,21 +5,33 @@ import Input from '../../components/UI/Input/Input';
 import SocialMedia from '../../components/UI/SocialMedia/SocialMedia';
 import OtpInput from '../../components/UI/OtpInput/OtpInput';
 import Loading from '../../components/UI/Loading/Loading';
+import ForgotPassword from '../../components/UI/ForgotPassword/ForgotPassword';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { FaRegUser } from "react-icons/fa";
 import { FiUnlock } from "react-icons/fi";
 
 const Login = ({ setTokens }) => {
+    // login
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    // register
     const [sighInName, setSighInName] = useState('');
     const [sighInEmail, setSighInEmail] = useState('');
     const [sighInPassword, setSighInPassword] = useState('');
     const [sighInPassword2, setSighInPassword2] = useState('');
-    const [isFormValid, setIsFormValid] = useState(false);
-    const [isSignUp, setIsSignUp] = useState(false);
+
+    //checking
     const [isLoginFormValid, setIsLoginFormValid] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(false);
+
+    //error
+    const [loginError, setLoginError] = useState('');
+
+    // loading
+    const [isSignUp, setIsSignUp] = useState(false);
+    const [forgotPassword, setForgotPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmitLogin = () => {
@@ -33,14 +45,17 @@ const Login = ({ setTokens }) => {
                 "password": password
             }
         }).then((response) => {
-            console.log(response.data)
-            setTokens({accessToken : response.data.access, refreshToken : response.data.refresh, accessTokenExpiry : Math.floor(Date.now() / 1000) + 180 * 60, refreshTokenExpiry : Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60});
             document.querySelector(".container").classList.add("active");
+            setTokens({ accessToken: response.data.access, refreshToken: response.data.refresh, accessTokenExpiry: Math.floor(Date.now() / 1000) + 180 * 60, refreshTokenExpiry: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 });
         }).catch((error) => {
             if (error.response) {
-                console.log(error.response)
-                console.log(error.response.status)
-                console.log(error.response.headers)
+                if (error.response.status === 401) {
+                    setLoginError("Email hoặc mật khẩu không hợp lệ");
+                } else {
+                    console.log(error.response)
+                    console.log(error.response.status)
+                    console.log(error.response.headers)
+                }
             }
             setIsSubmitting(false);
         })
@@ -50,26 +65,27 @@ const Login = ({ setTokens }) => {
     const onSubmitSignIn = () => {
         if (!isFormValid) return;
         console.log("Sign Up Form Submitted");
-        console.log(sighInName)
-        console.log(sighInEmail)
-        console.log(sighInPassword)
+        const values = {
+            "first_name": sighInName.split(" ")[0],
+            "last_name": sighInName.split(" ").slice(1).join(" "),
+            "username": sighInEmail,
+            "password": sighInPassword,
+        }
         setIsSignUp(true);
-        setTimeout(() => {
-            axios({
-                method: "POST",
-                url: "http://127.0.0.1:5000/login",
-                data: values
+        axios({
+            method: "POST",
+            url: "http://127.0.0.1:8000/users/register/",
+            data: values
+        })
+            .then((response) => {
+                setTokens(response.data.access_token)
+            }).catch((error) => {
+                if (error.response) {
+                    console.log(error.response)
+                    console.log(error.response.status)
+                    console.log(error.response.headers)
+                }
             })
-                .then((response) => {
-                    setToken(response.data.access_token)
-                }).catch((error) => {
-                    if (error.response) {
-                        console.log(error.response)
-                        console.log(error.response.status)
-                        console.log(error.response.headers)
-                    }
-                })
-        }, 1000)
     }
 
     const validateEmail = (email) => {
@@ -80,9 +96,9 @@ const Login = ({ setTokens }) => {
         const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         return pattern.test(password);
     }
-    const validatePassword2 = (password) => {
+    const validatePassword2 = React.useCallback((password) => {
         return password === sighInPassword;
-    }
+    }, [sighInPassword]);
 
     const handleInfoItemClick = () => {
         document.querySelector(".container").classList.toggle("log-in");
@@ -100,7 +116,7 @@ const Login = ({ setTokens }) => {
         const isLoginValid = validateEmail(email) && validatePassword(password);
         setIsLoginFormValid(isLoginValid);
 
-    }, [sighInName, sighInEmail, sighInPassword, sighInPassword2, email, password]);
+    }, [sighInName, sighInEmail, sighInPassword, sighInPassword2, email, password, validatePassword2]);
 
     return (
         <div className='loginPage' style={{ backgroundImage: `url(${loginBg})` }}>
@@ -142,14 +158,22 @@ const Login = ({ setTokens }) => {
                     <div className="container-form">
                         <div className="form-item log-in">
                             <div className="table">
-                                <div className="table-cell">
-                                    <h2 className="title">Đăng nhập</h2>
-                                    <Input id="email" name="email" type="email" placeholder="Email" value={email} setValue={setEmail} validate={validateEmail} warning={"Email không hợp lệ"} />
-                                    <Input id="password" name="password" type="password" placeholder="Mật khẩu" value={password} setValue={setPassword} validate={validatePassword} warning={"Mật khẩu không hợp lệ"} />
-                                    <div className="btn" onClick={onSubmitLogin} style={isLoginFormValid ? (isSubmitting ? { cursor: "not-allowed" } : {}) : { opacity: 0.5, cursor: "not-allowed" }}>
-                                        {!isSubmitting ? 'Đăng nhập' : <Loading width={'24px'} height={'24px'} />}
+                                {forgotPassword ?
+                                    <div className="table-cell">
+                                        <ForgotPassword goBack={setForgotPassword}/>
                                     </div>
-                                </div>
+                                    :
+                                    <div className="table-cell">
+                                        <h2 className="title">Đăng nhập</h2>
+                                        <Input id="email" name="email" type="email" placeholder="Email" value={email} setValue={setEmail} validate={validateEmail} warning={"Email không hợp lệ"} />
+                                        <Input id="password" name="password" type="password" placeholder="Mật khẩu" value={password} setValue={setPassword} validate={validatePassword} warning={"Mật khẩu không hợp lệ"} />
+                                        <div className="forgot-password-container"><a href='#' onClick={() => setForgotPassword(true)}>Quên mật khẩu</a></div>
+                                        <p className="login-warning">{loginError}</p>
+                                        <div className="btn" onClick={onSubmitLogin} style={isLoginFormValid ? { transform: "translateY(-12px)" } : { opacity: 0.5, cursor: "not-allowed", transform: "translateY(-12px)" }}>
+                                            {!isSubmitting ? 'Đăng nhập' : <Loading width={'24px'} height={'24px'} />}
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="form-item sign-up">
@@ -173,7 +197,6 @@ const Login = ({ setTokens }) => {
                                         </div>
                                     </div>
                                 }
-
                             </div>
                         </div>
                     </div>

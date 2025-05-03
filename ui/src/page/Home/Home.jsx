@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Home.css';
 import SideBar from '../../components/layout/SideBar/SiderBar';
@@ -27,7 +27,7 @@ const Home = ({accessToken, handleAccessTokenExpired, removeTokens}) => {
           console.log(error.response.headers);
         }
       });
-  }, [accessToken]);
+  }, [accessToken, handleAccessTokenExpired]);
   console.log(data);
   return (
     data && data !== null && data !== undefined ? (

@@ -1,12 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import React, { useCallback, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
 import Login from './page/Login/Login.jsx';
 import useToken from './components/hooks/useToken.js'
 import Home from './page/Home/Home.jsx';
 function App() {
 
-  const { saveTokens, accessToken, refreshToken, accessTokenExpiry, refreshTokenExpiry, handleAccessTokenExpired, removeTokens } = useToken()
+  const { saveTokens, accessToken, refreshToken, refreshTokenExpiry, handleAccessTokenExpired, removeTokens } = useToken()
 
   useEffect(() => {
     const currentTime = Math.floor(Date.now() / 1000);

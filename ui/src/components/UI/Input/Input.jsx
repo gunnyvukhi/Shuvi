@@ -1,9 +1,13 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
+
 import './Input.css';
 
-const Input = ({id, name, type, placeholder, value, setValue, validate, warning }) => {
+const Input = ({id, name, type, placeholder, value, setValue, validate, warning}) => {
     
+    const [inputType, setInputType] = useState(type);
+
     if (validate === undefined) {
         validate = (value) => {return true};
     }
@@ -29,12 +33,21 @@ const Input = ({id, name, type, placeholder, value, setValue, validate, warning 
             <input 
             id={id}
             name={name}
-            type={type}
+            type={inputType}
             value={value}
             onChange={handleChange}
             onBlur={handleBlur}
             className="input"/>
             <label className="label" style={value === "" ? {} : { transform: "translateY(-90%) scale(0.7)", backgroundColor: "#ffffff", paddingInline: "0.3em" }} htmlFor={name}>{placeholder}</label>
+            {type === "password" && (
+                <button
+                    type="button"
+                    className="toggle-password"
+                    onClick={() => setInputType(inputType === "password" ? "text" : "password")}
+                >
+                    {inputType === "password" ? <FaRegEyeSlash className='show-password-icon'/> : <FaRegEye className='hide-password-icon'/>}
+                </button>
+            )}
         </div>
         <p className='error' style={errorRef.current? {} : { margin: "0 0 16px 0"}}>{errorRef.current || warning}</p>
         </>
