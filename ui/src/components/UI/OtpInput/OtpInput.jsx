@@ -1,12 +1,10 @@
 import React, { useState, useRef } from 'react';
 import './OtpInput.css';
 import PropTypes from 'prop-types';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import Button from '../Button/Button';
 
-
-const OtpInput = ({email}) => {
+const OtpInput = ({email, goBack, goOn}) => {
     const [otp, setOtp] = useState(new Array(6).fill('')); // State to store OTP values
     const inputsRef = useRef([]); // Ref to store input elements
 
@@ -46,11 +44,13 @@ const OtpInput = ({email}) => {
         const otpValue = otpArray.join('');
         console.log('Submitting OTP:', otpValue);
         // Disable inputs after submission
-        inputsRef.current.forEach((input) => {
-            input.disabled = true;
-            input.classList.add('disabled');
-        });
+        // inputsRef.current.forEach((input) => {
+        //     input.disabled = true;
+        //     input.classList.add('disabled');
+        // });
         // Call API or handle OTP submission here
+
+        goOn(); // Call the goOn function to proceed
     };
 
     return (
@@ -66,19 +66,21 @@ const OtpInput = ({email}) => {
                         style={index === (6 / 2) ? { marginLeft: '8px' } : {}}
                         onChange={(e) => handleOtpChange(e, index)}
                         onKeyDown={(e) => handleOtpChange(e, index)}
-                        ref={(el) => (inputsRef.current[index] = el)} // Store input refs
+                        ref={(el) => (inputsRef.current[index] = el)}
                     />
                 ))}
             </div>
             <p className='otp-email'>Mã OTP đã được gửi về email <b>{email}</b></p>
             <p className="otp-resend">Gửi lại mã OTP?</p>
-
+            <Button label={'Quay Lại'} onClick={goBack} bgColor='#e74c3c'/>
         </div>
     );
 };
 
 OtpInput.propTypes = {
     email: PropTypes.string.isRequired,
+    goBack: PropTypes.func,
+    goOn: PropTypes.func,
 };
 
 OtpInput.defaultProps = {

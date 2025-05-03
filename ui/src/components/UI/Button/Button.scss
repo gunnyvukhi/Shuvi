@@ -1,0 +1,19 @@
+.button{
+  cursor: pointer;
+  text-align: center;
+  margin: 0 auto;
+  width: fit-content;
+  border: none;
+  border-radius: 8px;
+  opacity: 1;
+  padding: 10px 15px;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  position: relative;
+}
+
+.button:hover{
+    opacity: 0.7;
+}

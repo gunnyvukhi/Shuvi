@@ -57,6 +57,7 @@ const Login = ({ setTokens }) => {
                     console.log(error.response.headers)
                 }
             }
+        }).finally(() => {
             setIsSubmitting(false);
         })
     }
@@ -64,6 +65,7 @@ const Login = ({ setTokens }) => {
 
     const onSubmitSignIn = () => {
         if (!isFormValid) return;
+        setIsSubmitting(true);
         console.log("Sign Up Form Submitted");
         const values = {
             "first_name": sighInName.split(" ")[0],
@@ -71,21 +73,22 @@ const Login = ({ setTokens }) => {
             "username": sighInEmail,
             "password": sighInPassword,
         }
-        setIsSignUp(true);
         axios({
             method: "POST",
             url: "http://127.0.0.1:8000/users/register/",
             data: values
+        }).then((response) => {
+            setTokens({ accessToken: response.data.access });
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error.response)
+                console.log(error.response.status)
+                console.log(error.response.headers)
+            }
+        }).finally(() => {
+            setIsSubmitting(false);
+            setIsSignUp(true);
         })
-            .then((response) => {
-                setTokens(response.data.access_token)
-            }).catch((error) => {
-                if (error.response) {
-                    console.log(error.response)
-                    console.log(error.response.status)
-                    console.log(error.response.headers)
-                }
-            })
     }
 
     const validateEmail = (email) => {
@@ -160,11 +163,11 @@ const Login = ({ setTokens }) => {
                             <div className="table">
                                 {forgotPassword ?
                                     <div className="table-cell">
-                                        <ForgotPassword goBack={setForgotPassword}/>
+                                        <ForgotPassword goBack={setForgotPassword} />
                                     </div>
                                     :
                                     <div className="table-cell">
-                                        <h2 className="title">Đăng nhập</h2>
+                                        <h2 className="title" style={{ marginBottom: '12px' }}>Đăng nhập</h2>
                                         <Input id="email" name="email" type="email" placeholder="Email" value={email} setValue={setEmail} validate={validateEmail} warning={"Email không hợp lệ"} />
                                         <Input id="password" name="password" type="password" placeholder="Mật khẩu" value={password} setValue={setPassword} validate={validatePassword} warning={"Mật khẩu không hợp lệ"} />
                                         <div className="forgot-password-container"><a href='#' onClick={() => setForgotPassword(true)}>Quên mật khẩu</a></div>
@@ -180,10 +183,7 @@ const Login = ({ setTokens }) => {
                             <div className="table">
                                 {isSignUp ?
                                     <div className="table-cell">
-                                        <OtpInput email={sighInEmail} />
-                                        <div className="btn" onClick={() => setIsSignUp(false)}>
-                                            Quay lại
-                                        </div>
+                                        <OtpInput email={sighInEmail} goBack={() => setIsSignUp(false)} goOn={() => setIsSignUp(false)} />
                                     </div>
                                     :
                                     <div className="table-cell">
@@ -193,7 +193,7 @@ const Login = ({ setTokens }) => {
                                         <Input id="sighInPassword" name="sighInPassword" type="password" placeholder="Mật khẩu" value={sighInPassword} setValue={setSighInPassword} validate={validatePassword} warning={"Mật khẩu phải dài trên 8 và bao gồm ít nhất 1 ký tự in hoa, ký tự thường, ký tự đặc biệt và số"} />
                                         <Input id="sighInPassword2" name="sighInPassword2" type="password" placeholder="Nhập lại mật khẩu" value={sighInPassword2} setValue={setSighInPassword2} validate={validatePassword2} warning={"Mật khẩu nhập không trùng khớp"} />
                                         <div className="btn" onClick={onSubmitSignIn} style={isFormValid ? {} : { opacity: 0.5, cursor: "not-allowed" }}>
-                                            Đăng kí
+                                            {!isSubmitting ? 'Đăng kí' : <Loading width={'24px'} height={'24px'} />}
                                         </div>
                                     </div>
                                 }
