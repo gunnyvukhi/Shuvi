@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from django.contrib.auth.models import User
 from apps.core.models import BaseModel
+
 class UserInfo(BaseModel):
     user = models.OneToOneField(User, on_delete=CASCADE, related_name='user_info')
     phone_number = models.CharField(max_length=15, blank=True, null=True)
@@ -11,7 +12,6 @@ class UserInfo(BaseModel):
     rank = models.CharField(max_length=50, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     
-
 class Country(BaseModel):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=3, unique=True)
@@ -39,3 +39,9 @@ class Address(BaseModel):
     is_primary = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Otp(BaseModel):
+    email = models.EmailField()
+    otp_code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(default=None)

@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import useToken from './useToken.js';
-
+import useToken from './useToken.js'
 const useAuth = () => {
-    return { user, loading };
-};
+    const currentTime = Math.floor(Date.now() / 1000);
+    const { refreshTokenExpiry} = useToken();
+    if (!refreshTokenExpiry || refreshTokenExpiry === "" || refreshTokenExpiry === undefined || parseInt(refreshTokenExpiry) < currentTime) {
+      return false;
+    }
+    return true;
+}
 
-export default useAuth;
+export default useAuth

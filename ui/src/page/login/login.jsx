@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useToken from '../../components/hooks/useToken';
 import './Login.scss';
 import loginBg from '../../assets/images/login_bg.png';
 import Input from '../../components/UI/Input/Input';
@@ -7,11 +8,15 @@ import OtpInput from '../../components/UI/OtpInput/OtpInput';
 import Loading from '../../components/UI/Loading/Loading';
 import ForgotPassword from '../../components/UI/ForgotPassword/ForgotPassword';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import { FaRegUser } from "react-icons/fa";
 import { FiUnlock } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ setTokens }) => {
+const Login = () => {
+    const { saveTokens} = useToken()
+
+    const navigate = useNavigate()
+
     // login
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -46,7 +51,8 @@ const Login = ({ setTokens }) => {
             }
         }).then((response) => {
             document.querySelector(".container").classList.add("active");
-            setTokens({ accessToken: response.data.access, refreshToken: response.data.refresh, accessTokenExpiry: Math.floor(Date.now() / 1000) + 180 * 60, refreshTokenExpiry: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 });
+            saveTokens({ accessToken: response.data.access, refreshToken: response.data.refresh, accessTokenExpiry: Math.floor(Date.now() / 1000) + 180 * 60, refreshTokenExpiry: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 });
+            navigate('/apps/home');
         }).catch((error) => {
             if (error.response) {
                 if (error.response.status === 401) {
@@ -62,32 +68,47 @@ const Login = ({ setTokens }) => {
         })
     }
 
-
-    const onSubmitSignIn = () => {
+    const onSubmitSignUp = () => {
         if (!isFormValid) return;
         setIsSubmitting(true);
-        console.log("Sign Up Form Submitted");
-        const values = {
-            "first_name": sighInName.split(" ")[0],
-            "last_name": sighInName.split(" ").slice(1).join(" "),
-            "username": sighInEmail,
-            "password": sighInPassword,
-        }
         axios({
             method: "POST",
-            url: "http://127.0.0.1:8000/users/register/",
-            data: values
-        }).then((response) => {
-            setTokens({ accessToken: response.data.access });
+            url: "http://127.0.0.1:8000/users/otp/",
+            data: { email: sighInEmail }
+        }).then(() => {
+            setIsSignUp(true);
         }).catch((error) => {
             if (error.response) {
+                // setMessage('Không tìm thấy tài khoản này!');
                 console.log(error.response)
                 console.log(error.response.status)
                 console.log(error.response.headers)
             }
         }).finally(() => {
             setIsSubmitting(false);
-            setIsSignUp(true);
+        })
+    }
+    const onSubmitSignIn = ({otpCode}) => {
+        const values = {
+            "first_name": sighInName.split(" ")[0],
+            "last_name": sighInName.split(" ").slice(1).join(" "),
+            "username": sighInEmail,
+            "password": sighInPassword,
+            "otp_code": otpCode,
+        }
+        axios({
+            method: "POST",
+            url: "http://127.0.0.1:8000/users/register/",
+            data: values
+        }).then((response) => {
+            saveTokens({ accessToken: response.data.access, refreshToken: response.data.refresh, accessTokenExpiry: Math.floor(Date.now() / 1000) + 180 * 60, refreshTokenExpiry: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 });
+            navigate('/apps/home');
+        }).catch((error) => {
+            if (error.response) {
+                console.log(error.response)
+                console.log(error.response.status)
+                console.log(error.response.headers)
+            }
         })
     }
 
@@ -108,6 +129,7 @@ const Login = ({ setTokens }) => {
     };
 
     useEffect(() => {
+
         const isSignUpFormValid =
             sighInName &&
             validateEmail(sighInEmail) &&
@@ -183,7 +205,7 @@ const Login = ({ setTokens }) => {
                             <div className="table">
                                 {isSignUp ?
                                     <div className="table-cell">
-                                        <OtpInput email={sighInEmail} goBack={() => setIsSignUp(false)} goOn={() => setIsSignUp(false)} />
+                                        <OtpInput email={sighInEmail} goBack={() => setIsSignUp(false)} goOn={({data}) => {onSubmitSignIn({ otpCode: data.otp })}} />
                                     </div>
                                     :
                                     <div className="table-cell">
@@ -192,7 +214,7 @@ const Login = ({ setTokens }) => {
                                         <Input id="sighInEmail" name="sighInEmail" type="email" placeholder="Email" value={sighInEmail} setValue={setSighInEmail} validate={validateEmail} warning={"Email không hợp lệ"} />
                                         <Input id="sighInPassword" name="sighInPassword" type="password" placeholder="Mật khẩu" value={sighInPassword} setValue={setSighInPassword} validate={validatePassword} warning={"Mật khẩu phải dài trên 8 và bao gồm ít nhất 1 ký tự in hoa, ký tự thường, ký tự đặc biệt và số"} />
                                         <Input id="sighInPassword2" name="sighInPassword2" type="password" placeholder="Nhập lại mật khẩu" value={sighInPassword2} setValue={setSighInPassword2} validate={validatePassword2} warning={"Mật khẩu nhập không trùng khớp"} />
-                                        <div className="btn" onClick={onSubmitSignIn} style={isFormValid ? {} : { opacity: 0.5, cursor: "not-allowed" }}>
+                                        <div className="btn" onClick={onSubmitSignUp} style={isFormValid ? {} : { opacity: 0.5, cursor: "not-allowed" }}>
                                             {!isSubmitting ? 'Đăng kí' : <Loading width={'24px'} height={'24px'} />}
                                         </div>
                                     </div>
@@ -204,10 +226,6 @@ const Login = ({ setTokens }) => {
             </div>
         </div>
     );
-};
-
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired,
 };
 
 export default Login;

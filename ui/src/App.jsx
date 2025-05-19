@@ -1,34 +1,25 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import React, { useEffect } from 'react';
-import Login from './page/Login/Login.jsx';
-import useToken from './components/hooks/useToken.js'
-import Home from './page/Home/Home.jsx';
+import { Login, Home, Exercise, Nutrition } from './page/Page.js';
+import { keepTheme } from './components/utils/themes.js';
+import PrivateRoute from './components/utils/PrivateRoute/PrivateRoute.jsx';
+
 function App() {
-
-  const { saveTokens, accessToken, refreshToken, refreshTokenExpiry, handleAccessTokenExpired, removeTokens } = useToken()
-
   useEffect(() => {
-    const currentTime = Math.floor(Date.now() / 1000);
-    if (!refreshTokenExpiry || refreshTokenExpiry === "" || refreshTokenExpiry === undefined || parseInt(refreshTokenExpiry) < currentTime) {
-      removeTokens();
-    }
-  }, [refreshTokenExpiry, removeTokens])
+    keepTheme();
+  }, [])
 
   return (
     <BrowserRouter>
       <Routes>
-        {!refreshToken || refreshToken === "" || refreshToken === undefined ? (
-          <Route
-            path="/"
-            element={<Login setTokens={saveTokens} />}
-          />
-        ) : (
-            <Route
-              exact
-              path="/"
-              element={<Home accessToken={accessToken} handleAccessTokenExpired={handleAccessTokenExpired} removeTokens={removeTokens}/>}
-            />
-        )}
+        <Route
+          index
+          path="/login"
+          element={<Login/>}
+        />
+        <Route path="/apps" element={<PrivateRoute />} >
+          <Route exact path="home" element={<Home />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

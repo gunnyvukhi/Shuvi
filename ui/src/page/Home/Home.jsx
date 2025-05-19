@@ -1,44 +1,16 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import './Home.css';
-import SideBar from '../../components/layout/SideBar/SiderBar';
+import DefaultStyle from '../../components/layout/defaultStyle/defaultStyle.jsx';
+import useData from '../../components/hooks/useData.js';
+const Home = () => {
+  const { data, loading, error } = useData('http://127.0.0.1:8000/users/profile/');
 
-const Home = ({accessToken, handleAccessTokenExpired, removeTokens}) => {
-
-  const [data, setData] = useState({});
-
-  useEffect(() => {
-    handleAccessTokenExpired();
-    axios({
-      method: "GET",
-      url: "http://127.0.0.1:8000/users/profile/",
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    })
-      .then((response) => {
-        setData(response.data);
-      }).catch((error) => {
-        if (error.response) {
-          console.log(error.response);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
-  }, [accessToken, handleAccessTokenExpired]);
-  console.log(data);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
   return (
-    data && data !== null && data !== undefined ? (
-      <div className="app-container">
-        <SideBar selected={1} data={data} removeTokens={removeTokens} />
-      </div>
-    ) : (
-      <div className="app-container">
-        <h1>Loading...</h1>
-      </div>
-    )
+    <DefaultStyle selected={1} data={data}>
+      <h1>Welcome, {data.first_name} {data.last_name}</h1>
+    </DefaultStyle>
   );
 }
 

@@ -1,9 +1,12 @@
 from rest_framework import serializers
-from .models import Country, City, Address, UserInfo
+from .models import Country, City, Address, UserInfo, Otp
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.models import User
+from apps.core.serializers import DynamicFieldsModelSerializer
+import random
+from django.utils import timezone
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -123,3 +126,16 @@ class AddressSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
 
+class OtpSerializer(DynamicFieldsModelSerializer):
+    otp_code = serializers.CharField(max_length=6, required=False)
+    email = serializers.EmailField(required=True)
+    class Meta:
+        model = Otp
+        fields = ['email', 'otp_code', 'created_at', 'expires_at']
+
+    def create(self, validated_data):
+        # Check if there is any OTP with the same email and delete it
+        existing_otp = self.Meta.model.objects.filter(email=validated_data['email'])
+        if existing_otp.exists():
+            existing_otp.delete()
+        return super().create(validated_data)

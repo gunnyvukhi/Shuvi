@@ -1,0 +1,56 @@
+.container--toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .toggle--checkbox {
+        display: none;
+
+        &:checked + .toggle--label .toggle--label-background {
+            background-color: #ecf0f1;
+        }
+
+        &:checked + .toggle--label .toggle--label-background::after {
+             // Adjust based on the size of the toggle
+                content: '☀';
+                color: #f1c40f;
+                font-size: 24px;
+                line-height: 20px;
+                left: 4px;
+                transform: translateY(-50%);
+        }
+    }
+
+    .toggle--label {
+        display: inline-block;
+        width: 56px; // Adjust width
+        height: 26px; // Adjust height
+        background-color: #34495e; // Default background color
+        border-radius: 56px;
+        position: relative;
+        cursor: pointer;
+
+        .toggle--label-background {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            border-radius: 56px;
+            transition: background-color 0.3s ease;
+
+            &::after {
+                content: '🌙';                ;
+                color: #ecf0f1;
+                font-size: 18px;
+                line-height: 20px;
+                text-align: center;
+                background-color: transparent;
+                position: absolute;
+                top: 50%;
+                transform: translate(28px, -50%);
+                
+                transition: transform 0.3s ease;
+            }
+        }
+    }
+}

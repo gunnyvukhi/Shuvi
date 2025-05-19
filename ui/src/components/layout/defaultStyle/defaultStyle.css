@@ -1,0 +1,13 @@
+.app-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+}
+
+.app-content {
+  position: relative;
+  margin-left: 16px;
+  flex-grow: 1;
+  padding: 20px
+}
