@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import useToken from '../../components/hooks/useToken';
 import './Login.scss';
 import loginBg from '../../assets/images/login_bg.png';
@@ -7,15 +8,18 @@ import SocialMedia from '../../components/UI/SocialMedia/SocialMedia';
 import OtpInput from '../../components/UI/OtpInput/OtpInput';
 import Loading from '../../components/UI/Loading/Loading';
 import ForgotPassword from '../../components/UI/ForgotPassword/ForgotPassword';
-import axios from 'axios';
 import { FaRegUser } from "react-icons/fa";
 import { FiUnlock } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../../components/hooks/useAuth';
 
 const Login = () => {
     const { saveTokens} = useToken()
 
     const navigate = useNavigate()
+
+    // check if user is logged in
+    const auth = useAuth();
 
     // login
     const [email, setEmail] = useState('');
@@ -129,6 +133,10 @@ const Login = () => {
     };
 
     useEffect(() => {
+        // check if user is logged in
+        if (auth) {
+            navigate('/apps/home');
+        }
 
         const isSignUpFormValid =
             sighInName &&
@@ -141,7 +149,7 @@ const Login = () => {
         const isLoginValid = validateEmail(email) && validatePassword(password);
         setIsLoginFormValid(isLoginValid);
 
-    }, [sighInName, sighInEmail, sighInPassword, sighInPassword2, email, password, validatePassword2]);
+    }, [sighInName, sighInEmail, sighInPassword, sighInPassword2, email, password, validatePassword2, auth, navigate]);
 
     return (
         <div className='loginPage' style={{ backgroundImage: `url(${loginBg})` }}>

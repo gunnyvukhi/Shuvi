@@ -57,22 +57,19 @@ function useToken() {
         console.log(error.response)
         console.log(error.response.status)
         console.log(error.response.headers)
+        return false;
       }
-      return false;
     })
   };
 
-  function handleAccessTokenExpired() {
+  const handleAccessTokenExpired = async () => {
     const currentTime = Math.floor(Date.now() / 1000);
     if (
       !accessToken || accessToken === "" || accessToken === undefined ||
       !accessTokenExpiry || accessTokenExpiry === "" || accessTokenExpiry === undefined ||
       parseInt(accessTokenExpiry) < currentTime
     ) {
-      const fetchNewAccessTokenResult = fetchNewAccessToken();
-      if (!fetchNewAccessTokenResult) {
-        removeTokens();
-      }
+      await fetchNewAccessToken();
     }
   }
 
@@ -94,6 +91,7 @@ function useToken() {
     accessTokenExpiry,
     refreshTokenExpiry,
     handleAccessTokenExpired,
+    fetchNewAccessToken,
     removeTokens
   };
 }

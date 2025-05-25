@@ -4,10 +4,14 @@ import SideBar from '../material/SideBar/SiderBar.jsx'
 const defaultStyle = ({selected ,data, children}) => {
   return (
     <div className="app-container">
+      <div className="app-sidebar">
         <SideBar selected={selected} data={data}/>
-        <div className="app-content">
-              {children}
-        </div>
+      </div>
+      <div
+        className="app-content"
+      >
+        {children}
+      </div>
     </div>
   )
 }

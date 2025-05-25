@@ -1,0 +1,47 @@
+.line-chart-container .line-chart-option-btn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    position: absolute;
+    right: 10px;
+    top: 12px;
+}
+
+.line-chart-container .line-chart-option-btn:hover {
+    background-color: #7f8c8d83;
+}
+
+.line-chart-container .line-chart-options-container {
+    position: absolute;
+    z-index: 10;
+    width: fit-content;
+    font-size: 10px;
+    border-radius: 12px;
+    right: -80px;
+    top: 16px;
+    background-color: var(--navbar-dark-primary);
+    padding: 8px;
+    cursor: default;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.15);
+}
+.line-chart-container .line-chart-options-container p {
+    text-align: center;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+.line-chart-container .line-chart-options-container .line-chart-options {
+    display: block;
+    text-align: left;
+    width: 100%;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--navbar-dark-primary);
+    cursor: pointer;
+}
+.line-chart-container .line-chart-options-container .line-chart-options:hover {
+        background-color: var(--navbar-dark-secondary);
+}

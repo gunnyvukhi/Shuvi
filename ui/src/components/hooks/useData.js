@@ -10,27 +10,27 @@ function useData(url) {
   useEffect(() => {
     handleAccessTokenExpired();
     let isMounted = true; // avoid updating state if component unmounted
-
-    axios({
-            method: "GET",
-            url: url,
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-      .then((response) => {
-        if (isMounted) {
-          setData(response.data);
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          setError(err);
-          setLoading(false);
+    const fetchData = async () => {
+      try {
+      const response = await axios({
+        method: "GET",
+        url: url,
+        headers: {
+        'Authorization': `Bearer ${accessToken}`
         }
       });
-
+      if (isMounted) {
+        setData(response.data);
+        setLoading(false);
+      }
+      } catch (err) {
+      if (isMounted) {
+        setError(err);
+        setLoading(false);
+      }
+      }
+    };
+    fetchData();
     return () => {
       isMounted = false;
     };
